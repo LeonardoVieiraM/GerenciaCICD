@@ -1,0 +1,78 @@
+version: 2.1
+
+executors:
+  node-executor:
+    docker:
+      - image: cimg/node:18.17
+    resource_class: small
+
+jobs:
+  build-and-test:
+    executor: node-executor
+    steps:
+      - checkout
+      - run:
+          name: Install dependencies
+          command: npm ci
+      - run:
+          name: Build (no-op for Node.js)
+          command: npm run build
+      - run:
+          name: Unit Tests
+          command: npm run test:unit
+      - run:
+          name: Integration Tests
+          command: npm run test:integration
+      - run:
+          name: Acceptance Tests
+          command: npm run test:acceptance
+      - persist_to_workspace:
+          root: .
+          paths:
+            - .
+
+  deploy:
+    executor: node-executor
+    steps:
+      - attach_workspace:
+          at: .
+      - setup_remote_docker:
+          docker_layer_caching: true
+      - run:
+          name: Build Docker image
+          command: |
+            docker build -t ${DOCKERHUB_USERNAME}/meu-projeto-simples:${CIRCLE_SHA1} .
+            docker tag ${DOCKERHUB_USERNAME}/meu-projeto-simples:${CIRCLE_SHA1} ${DOCKERHUB_USERNAME}/meu-projeto-simples:latest
+      - run:
+          name: Push Docker image to Docker Hub
+          command: |
+            echo ${DOCKERHUB_PASSWORD} | docker login -u ${DOCKERHUB_USERNAME} --password-stdin
+            docker push ${DOCKERHUB_USERNAME}/meu-projeto-simples:${CIRCLE_SHA1}
+            docker push ${DOCKERHUB_USERNAME}/meu-projeto-simples:latest
+      # Opção 1: Deploy no Railway (recomendado, gratuito)
+      - run:
+          name: Deploy to Railway
+          command: |
+            curl -X POST https://api.railway.app/deploy/webhook/${RAILWAY_WEBHOOK_TOKEN}
+      # Opção 2: Deploy no Heroku (alternativa gratuita)
+      # - run:
+      #     name: Deploy to Heroku
+      #     command: |
+      #       docker login --username=_ --password=${HEROKU_API_KEY} registry.heroku.com
+      #       docker tag ${DOCKERHUB_USERNAME}/meu-projeto-simples:latest registry.heroku.com/${HEROKU_APP_NAME}/web
+      #       docker push registry.heroku.com/${HEROKU_APP_NAME}/web
+
+workflows:
+  version: 2
+  ci-cd-pipeline:
+    jobs:
+      - build-and-test:
+          filters:
+            branches:
+              only: main
+      - deploy:
+          requires:
+            - build-and-test
+          filters:
+            branches:
+              only: main
