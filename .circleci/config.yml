@@ -41,14 +41,14 @@ jobs:
       - run:
           name: Build Docker image
           command: |
-            docker build -t ${DOCKERHUB_USERNAME}/meu-projeto-simples:${CIRCLE_SHA1} .
-            docker tag ${DOCKERHUB_USERNAME}/meu-projeto-simples:${CIRCLE_SHA1} ${DOCKERHUB_USERNAME}/meu-projeto-simples:latest
+            docker build -t ${DOCKERHUB_USERNAME,,}/meu-projeto-simples:${CIRCLE_SHA1} .
+            docker tag ${DOCKERHUB_USERNAME,,}/meu-projeto-simples:${CIRCLE_SHA1} ${DOCKERHUB_USERNAME,,}/meu-projeto-simples:latest
       - run:
           name: Push Docker image to Docker Hub
           command: |
             echo ${DOCKERHUB_PASSWORD} | docker login -u ${DOCKERHUB_USERNAME} --password-stdin
-            docker push ${DOCKERHUB_USERNAME}/meu-projeto-simples:${CIRCLE_SHA1}
-            docker push ${DOCKERHUB_USERNAME}/meu-projeto-simples:latest
+            docker push ${DOCKERHUB_USERNAME,,}/meu-projeto-simples:${CIRCLE_SHA1}
+            docker push ${DOCKERHUB_USERNAME,,}/meu-projeto-simples:latest
       - run:
           name: Deploy to Railway
           command: |
