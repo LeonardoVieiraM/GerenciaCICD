@@ -1,5 +1,7 @@
 # Projeto CI/CD - Gestão de Configuração de Software
 
+[![CircleCI](https://dl.circleci.com/status-badge/img/circleci/MnuMbtt1A8ubQrB2EceZwc/5z5KC7dxG5dZFE8ZL9ebiq/tree/main.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/circleci/MnuMbtt1A8ubQrB2EceZwc/5z5KC7dxG5dZFE8ZL9ebiq/tree/main)
+
 ## Requisitos Atendidos
 
 - **10+ arquivos**: 19 arquivos de código fonte
