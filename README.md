@@ -48,6 +48,7 @@ Push para Docker Hub
 Deploy → Railway/Heroku
 
 ## Estrutura do Projeto
+```
 ├── .circleci/config.yml   # Pipeline CI/CD
 ├── src/                   # Código fonte
 │   ├── controllers/       # Controladores
@@ -62,7 +63,7 @@ Deploy → Railway/Heroku
 │   └── acceptance/        # Aceitação
 ├── Dockerfile             # Containerização
 └── server.js              # Entry point
-
+```
 ## Configurando o CircleCI
 
 1. Faça o push do código para um repositório no GitHub
