@@ -51,7 +51,7 @@ describe('API Integration Tests', () => {
 
     test('should return 404 for non-existent user', async () => {
       const response = await request(app).get('/api/users/99999');
-      expect(response.statusCode).toBe(999);
+      expect(response.statusCode).toBe(404);
     });
   });
 
