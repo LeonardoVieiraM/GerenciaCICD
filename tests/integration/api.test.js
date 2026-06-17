@@ -49,6 +49,10 @@ describe('API Integration Tests', () => {
       expect(getResponse.body.name).toBe('Find User');
     });
 
+    test('should return 404 for non-existent user', async () => {
+      const response = await request(app).get('/api/users/99999');
+      expect(response.statusCode).toBe(999);
+    });
   });
 
   describe('PUT /api/users/:id', () => {
